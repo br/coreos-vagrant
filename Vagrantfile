@@ -13,9 +13,9 @@ $num_instances = 1
 $instance_name_prefix = "core"
 $update_channel = "alpha"
 $enable_serial_logging = false
-$share_home = false
+$share_home = true
 $vm_gui = false
-$vm_memory = 1024
+$vm_memory = 4096
 $vm_cpus = 1
 $shared_folders = {}
 $forwarded_ports = {}
@@ -125,6 +125,11 @@ Vagrant.configure("2") do |config|
       $shared_folders.each_with_index do |(host_folder, guest_folder), index|
         config.vm.synced_folder host_folder.to_s, guest_folder.to_s, id: "core-share%02d" % index, nfs: true, mount_options: ['nolock,vers=3,udp']
       end
+
+      # (49000..49900).each do |port|
+      #   config.vm.network :forwarded_port, :host => port, :guest => port
+      # end
+      # config.vm.synced_folder "/Users", "/Users", id: "core", :nfs => true, :mount_options => ['nolock,vers=3,udp']
 
       if $share_home
         config.vm.synced_folder ENV['HOME'], ENV['HOME'], id: "home", :nfs => true, :mount_options => ['nolock,vers=3,udp']
